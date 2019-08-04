@@ -297,15 +297,7 @@ def get_entitlement(oidc_profile):
     rpt = oidc_profile.realm.client.authz_api_client.entitlement(
         token=access_token)
 
-    rpt_decoded = oidc_profile.realm.client.openid_api_client.decode_token(
-        token=rpt,
-        key=oidc_profile.realm.certs,
-        options={
-            'verify_signature': True,
-            'exp': True,
-            'iat': True,
-            'aud': True
-        })
+    rpt_decoded = rpt
     return rpt_decoded
 
 
