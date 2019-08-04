@@ -100,6 +100,7 @@ class KeycloakAuthorizationBase(object):
 
         granted_perms = self.get_all_permissions(user_obj, obj)
         logger.error(granted_perms)
+        logger.error(perm)
         return perm in granted_perms
 
 
