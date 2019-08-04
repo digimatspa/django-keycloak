@@ -293,6 +293,7 @@ def get_entitlement(oidc_profile):
     :return: Decoded RPT
     """
     access_token = get_active_access_token(oidc_profile=oidc_profile)
+    logger.error(access_token)
 
     rpt = oidc_profile.realm.client.authz_api_client.entitlement(
         token=access_token)

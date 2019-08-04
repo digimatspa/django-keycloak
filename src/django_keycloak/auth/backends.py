@@ -57,11 +57,11 @@ class KeycloakAuthorizationBase(object):
             ]
         elif settings.KEYCLOAK_PERMISSIONS_METHOD == 'resource':
             permissions = []
-            for p in rpt_decoded['authorization'].get('permissions', []):
+            for p in rpt_decoded:
                 if 'scopes' in p:
                     for scope in p['scopes']:
-                        if '.' in p['resource_set_name']:
-                            app, model = p['resource_set_name'].split('.', 1)
+                        if '.' in p['rsname']:
+                            app, model = p['rsname'].split('.', 1)
                             permissions.append('{app}.{scope}_{model}'.format(
                                 app=app,
                                 scope=scope,
@@ -70,10 +70,10 @@ class KeycloakAuthorizationBase(object):
                         else:
                             permissions.append('{scope}_{resource}'.format(
                                 scope=scope,
-                                resource=p['resource_set_name']
+                                resource=p['rsname']
                             ))
                 else:
-                    permissions.append(p['resource_set_name'])
+                    permissions.append(p['rsname'])
 
             return permissions
         else:
