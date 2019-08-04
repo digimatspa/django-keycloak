@@ -20,7 +20,8 @@ def synchronize(client):
         .clients.by_id(keycloak_client_id).roles
 
     for permission in Permission.objects.all():
-
+        logger.error(permission)
+        logger.error(permission.codename)
         try:
             role_api.create(name=permission.codename,
                             description=permission.name)
