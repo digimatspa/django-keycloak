@@ -45,10 +45,10 @@ class KeycloakAuthorizationBase(object):
         if not hasattr(user_obj, 'oidc_profile'):
             return set()
 
-        rpt_decoded = django_keycloak.services.oidc_profile\
-            .get_entitlement(oidc_profile=user_obj.oidc_profile)
 
         if settings.KEYCLOAK_PERMISSIONS_METHOD == 'role':
+            rpt_decoded = django_keycloak.services.oidc_profile \
+                .get_entitlement(oidc_profile=user_obj.oidc_profile)
             return [
                 role for role in rpt_decoded['resource_access'].get(
                     user_obj.oidc_profile.realm.client.client_id,
@@ -56,12 +56,13 @@ class KeycloakAuthorizationBase(object):
                 )['roles']
             ]
         elif settings.KEYCLOAK_PERMISSIONS_METHOD == 'resource':
+            rpt_decoded = user_obj.oidc_profile.get_active_access_token(oidc_profile=user_obj.oidc_profile)
             permissions = []
-            for p in rpt_decoded['authorization'].get('permissions', []):
+            for p in rpt_decoded:
                 if 'scopes' in p:
                     for scope in p['scopes']:
-                        if '.' in p['resource_set_name']:
-                            app, model = p['resource_set_name'].split('.', 1)
+                        if '.' in p['rsname']:
+                            app, model = p['rsname'].split('.', 1)
                             permissions.append('{app}.{scope}_{model}'.format(
                                 app=app,
                                 scope=scope,
@@ -70,11 +71,11 @@ class KeycloakAuthorizationBase(object):
                         else:
                             permissions.append('{scope}_{resource}'.format(
                                 scope=scope,
-                                resource=p['resource_set_name']
+                                resource=p['rsname']
                             ))
                 else:
-                    permissions.append(p['resource_set_name'])
-            logger.error(permissions)
+                    permissions.append(p['rsname'])
+
             return permissions
         else:
             raise ImproperlyConfigured(
