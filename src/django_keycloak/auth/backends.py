@@ -74,7 +74,7 @@ class KeycloakAuthorizationBase(object):
                             ))
                 else:
                     permissions.append(p['rsname'])
-
+            logger.error(permissions)
             return permissions
         else:
             raise ImproperlyConfigured(
