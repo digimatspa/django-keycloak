@@ -14,7 +14,6 @@ from keycloak.exceptions import KeycloakClientError
 from django_keycloak.services.exceptions import TokensExpired
 from django_keycloak.remote_user import KeycloakRemoteUser
 
-
 import django_keycloak.services.realm
 
 logger = logging.getLogger(__name__)
@@ -86,13 +85,13 @@ def update_or_create_user_and_oidc_profile(client, id_token_object):
     OpenIdConnectProfileModel = get_openid_connect_profile_model()
 
     if OpenIdConnectProfileModel.is_remote:
-        oidc_profile, _ = OpenIdConnectProfileModel.objects.\
+        oidc_profile, _ = OpenIdConnectProfileModel.objects. \
             update_or_create(
-                sub=id_token_object['sub'],
-                defaults={
-                    'realm': client.realm
-                }
-            )
+            sub=id_token_object['sub'],
+            defaults={
+                'realm': client.realm
+            }
+        )
 
         UserModel = get_remote_user_model()
         oidc_profile.user = UserModel(id_token_object)
@@ -273,7 +272,7 @@ def get_active_access_token(oidc_profile):
 
     if initiate_time > oidc_profile.expires_before:
         # Refresh token
-        token_response = oidc_profile.realm.client.openid_api_client\
+        token_response = oidc_profile.realm.client.openid_api_client \
             .refresh_token(refresh_token=oidc_profile.refresh_token)
 
         oidc_profile = update_tokens(token_model=oidc_profile,
@@ -294,12 +293,6 @@ def get_entitlement(oidc_profile):
     :return: Decoded RPT
     """
     access_token = get_active_access_token(oidc_profile=oidc_profile)
-
-    logger.error(oidc_profile.realm.client.uma_api_client.resource_create_ticket(access_token,
-                                                                                 'api.study',
-                                                                                 oidc_profile.realm.server.url,
-                                                                                 oidc_profile.realm.server.internal_url,
-                                                                                 ['view',]).content)
 
     rpt = oidc_profile.realm.client.authz_api_client.entitlement(
         token=access_token)
