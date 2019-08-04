@@ -49,7 +49,7 @@ class KeycloakAuthorizationBase(object):
         if settings.KEYCLOAK_PERMISSIONS_METHOD == 'role':
             rpt = django_keycloak.services.oidc_profile\
                 .get_active_access_token(oidc_profile=user_obj.oidc_profile)
-            rpt_decoded = user_obj.realm.client.openid_api_client.decode_token(
+            rpt_decoded = user_obj.oidc_profile.realm.client.openid_api_client.decode_token(
                 token=rpt,
                 key=user_obj.oidc_profile.realm.certs,
                 options={
