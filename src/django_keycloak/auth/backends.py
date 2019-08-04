@@ -47,7 +47,17 @@ class KeycloakAuthorizationBase(object):
 
 
         if settings.KEYCLOAK_PERMISSIONS_METHOD == 'role':
-            rpt_decoded = django_keycloak.services.oidc_profile.get_active_access_token(oidc_profile=user_obj.oidc_profile)
+            rpt = django_keycloak.services.oidc_profile\
+                .get_active_access_token(oidc_profile=user_obj.oidc_profile)
+            rpt_decoded = user_obj.realm.client.openid_api_client.decode_token(
+                token=rpt,
+                key=user_obj.oidc_profile.realm.certs,
+                options={
+                    'verify_signature': True,
+                    'exp': True,
+                    'iat': True,
+                    'aud': True
+                })
             return [
                 role for role in rpt_decoded['resource_access'].get(
                     user_obj.oidc_profile.realm.client.client_id,
