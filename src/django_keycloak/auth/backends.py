@@ -47,8 +47,7 @@ class KeycloakAuthorizationBase(object):
 
 
         if settings.KEYCLOAK_PERMISSIONS_METHOD == 'role':
-            rpt_decoded = django_keycloak.services.oidc_profile \
-                .get_entitlement(oidc_profile=user_obj.oidc_profile)
+            rpt_decoded = user_obj.oidc_profile.get_active_access_token(oidc_profile=user_obj.oidc_profile)
             return [
                 role for role in rpt_decoded['resource_access'].get(
                     user_obj.oidc_profile.realm.client.client_id,
@@ -56,7 +55,8 @@ class KeycloakAuthorizationBase(object):
                 )['roles']
             ]
         elif settings.KEYCLOAK_PERMISSIONS_METHOD == 'resource':
-            rpt_decoded = user_obj.oidc_profile.get_active_access_token(oidc_profile=user_obj.oidc_profile)
+            rpt_decoded = django_keycloak.services.oidc_profile \
+                .get_entitlement(oidc_profile=user_obj.oidc_profile)
             permissions = []
             for p in rpt_decoded:
                 if 'scopes' in p:
