@@ -121,6 +121,14 @@ class Client(models.Model):
         import django_keycloak.services.client
         return django_keycloak.services.client.get_uma1_client(client=self)
 
+    @cached_property
+    def uma_api_client(self):
+        """
+        :rtype: keycloak.uma.KeycloakUMA
+        """
+        import django_keycloak.services.client
+        return django_keycloak.services.client.get_uma_client(client=self)
+
     def __str__(self):
         return self.client_id
 
