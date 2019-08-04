@@ -44,6 +44,8 @@ def synchronize_resources(client, app_config):
             uma_client.resource_set_create(
                 token=access_token,
                 name=klass._meta.label_lower,
+                server_url=client.realm.server.url,
+                internal_url=client.realm.server.internal_url,
                 type='urn:{client}:resources:{model}'.format(
                     client=slugify(client.client_id),
                     model=klass._meta.label_lower
