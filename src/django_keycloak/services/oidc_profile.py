@@ -295,7 +295,11 @@ def get_entitlement(oidc_profile):
     """
     access_token = get_active_access_token(oidc_profile=oidc_profile)
 
-    logger.error(oidc_profile.realm.client.uma_api_client.resource_create_ticket(access_token, 'api.study', {'view'}).content)
+    logger.error(oidc_profile.realm.client.uma_api_client.resource_create_ticket(access_token,
+                                                                                 'api.study',
+                                                                                 server_url=oidc_profile.realm.server.url,
+                                                                                 internal_url=oidc_profile.realm.server.internal_url,
+                                                                                 ['view',]).content)
 
     rpt = oidc_profile.realm.client.authz_api_client.entitlement(
         token=access_token)
