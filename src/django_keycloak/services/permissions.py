@@ -21,7 +21,7 @@ def synchronize(client):
 
     for permission in Permission.objects.all():
         try:
-            role_api.create(name=permission.content_type + '.' + permission.codename,
+            role_api.create(name=permission.content_type.app_label + '.' + permission.codename,
                             description=permission.name)
         except HTTPError as e:
             if e.response.status_code != 409:
