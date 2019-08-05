@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import auth
 from django.core.exceptions import PermissionDenied
 
@@ -175,6 +177,7 @@ class KeycloakRemoteUser(object):
                     or backend.__module__.startswith('django.contrib.auth'):
                 continue
             try:
+                logging.getLogger(__name__).error('remote_user has_perm')
                 if backend.has_perm(self, perm, obj):
                     return True
             except PermissionDenied:

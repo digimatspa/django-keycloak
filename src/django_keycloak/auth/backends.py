@@ -94,7 +94,8 @@ class KeycloakAuthorizationBase(object):
             )
 
     def has_perm(self, user_obj, perm, obj=None):
-
+        logger.error(user_obj)
+        logger.error(perm)
         if not user_obj.is_active:
             return False
 
