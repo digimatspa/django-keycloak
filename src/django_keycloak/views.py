@@ -43,8 +43,6 @@ class Login(RedirectView):
 
         self.request.session['oidc_state'] = str(nonce.state)
 
-        logger.error(self.request.realm)
-        logger.error(self.request)
         authorization_url = self.request.realm.client.openid_api_client\
             .authorization_url(
                 redirect_uri=nonce.redirect_uri,

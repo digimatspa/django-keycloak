@@ -51,6 +51,7 @@ class Realm(models.Model):
 
     @property
     def well_known_oidc(self):
+        logger.error(self._well_known_oidc)
         return json.loads(self._well_known_oidc)
 
     @well_known_oidc.setter
