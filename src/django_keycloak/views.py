@@ -49,7 +49,8 @@ class Login(RedirectView):
                 scope='openid given_name family_name email',
                 state=str(nonce.state)
             )
-
+        logger.error(self.request.realm)
+        logger.error(self.request)
         if self.request.realm.server.internal_url:
             authorization_url = authorization_url.replace(
                 self.request.realm.server.internal_url,
