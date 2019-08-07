@@ -1,3 +1,5 @@
+import logging
+
 from keycloak.realm import KeycloakRealm
 
 try:
@@ -66,6 +68,7 @@ def get_issuer(realm):
     :return: issuer
     :rtype: str
     """
+    logging.getLogger(__name__).error(realm.well_known_oidc)
     issuer = realm.well_known_oidc['issuer']
     if realm.server.internal_url:
         return issuer.replace(realm.server.internal_url, realm.server.url, 1)

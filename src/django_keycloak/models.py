@@ -56,6 +56,7 @@ class Realm(models.Model):
 
     @well_known_oidc.setter
     def well_known_oidc(self, content):
+        logger.error(content)
         self._well_known_oidc = json.dumps(content)
 
     _keycloak_realm = None
