@@ -2,6 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -22,7 +23,7 @@ class Migration(migrations.Migration):
                 ('refresh_expires_before', models.DateTimeField(null=True)),
                 ('oidc_profile', models.ForeignKey(
                     on_delete=django.db.models.deletion.CASCADE,
-                    to='django_keycloak.OpenIdConnectProfile')),
+                    to=settings.KEYCLOAK_OIDC_PROFILE_MODEL)),
             ],
         ),
         migrations.CreateModel(

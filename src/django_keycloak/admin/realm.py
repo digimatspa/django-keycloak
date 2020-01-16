@@ -4,13 +4,12 @@ from requests.exceptions import HTTPError
 
 from django_keycloak.models import (
     Client,
-    OpenIdConnectProfile,
     RemoteClient
 )
 import django_keycloak.services.permissions
 import django_keycloak.services.realm
 import django_keycloak.services.uma
-
+from django_keycloak.services.oidc_profile import get_openid_connect_profile_model
 
 def refresh_open_id_connect_well_known(modeladmin, request, queryset):
     for realm in queryset:
@@ -40,7 +39,9 @@ refresh_certs.short_description = 'Refresh Certificates'
 
 
 def clear_client_tokens(modeladmin, request, queryset):
-    OpenIdConnectProfile.objects.filter(realm__in=queryset).update(
+    profile_class = get_openid_connect_profile_model()
+
+    profile_class.objects.filter(realm__in=queryset).update(
         access_token=None,
         expires_before=None,
         refresh_token=None,
