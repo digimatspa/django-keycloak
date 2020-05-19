@@ -6,6 +6,7 @@ from django.apps import apps as django_apps
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.db import transaction
 from django.utils import timezone
 from django.utils.module_loading import import_string
@@ -109,6 +110,15 @@ def update_or_create_user_and_oidc_profile(client, id_token_object):
                 'last_name': id_token_object.get('family_name', '')
             }
         )
+
+        if hasattr(settings, 'KEYCLOAK_COPY_GROUPS') and settings.KEYCLOAK_COPY_GROUPS:
+            groups = id_token_object.get('groups', None)
+            if  groups is not None and len(groups)>0:
+                user.groups.clear()
+                for group_name in groups:
+                    group, _ = Group.objects.update_or_create(name=group_name)
+                    group.user_set.add(user)
+
 
         oidc_profile, _ = OpenIdConnectProfileModel.objects.update_or_create(
             sub=id_token_object['sub'],
