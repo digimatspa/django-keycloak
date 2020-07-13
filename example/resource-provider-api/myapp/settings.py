@@ -64,6 +64,8 @@ AUTHENTICATION_BACKENDS = [
     'django_keycloak.auth.backends.KeycloakIDTokenAuthorizationBackend'
 ]
 
+KEYCLOAK_OIDC_PROFILE_MODEL = 'django_keycloak.RemoteUserOpenIdConnectProfile'
+
 ROOT_URLCONF = 'myapp.urls'
 
 TEMPLATES = [

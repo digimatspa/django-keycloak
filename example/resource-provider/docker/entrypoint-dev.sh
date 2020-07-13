@@ -2,8 +2,10 @@
 set -e
 
 pip install -e ./../django-keycloak/
-pip install -e ./../python-keycloak-client/ || true
-pip install -e ./../django-dynamic-fixtures/ || true
+#pip install -e ./../python-keycloak-client/ || true
+#pip install -e ./../django-dynamic-fixtures/ || true
+pip install python-keycloak-client
+pip install django-dynamic-fixtures
 
 if [ -f db.sqlite3 ]; then
     echo "Application already initialized."
@@ -16,13 +18,13 @@ else
     python manage.py load_dynamic_fixtures myapp
 fi
 
-if grep -q Yarf /usr/local/lib/python3.7/site-packages/certifi/cacert.pem
+if grep -q Yarf /usr/local/lib/python3.8/site-packages/certifi/cacert.pem
     then
         echo "CA already added"
     else
         echo "Add CA to trusted pool"
-        echo "\n\n# Yarf" >> /usr/local/lib/python3.7/site-packages/certifi/cacert.pem
-        cat /usr/src/ca.pem >> /usr/local/lib/python3.7/site-packages/certifi/cacert.pem
+        echo "\n\n# Yarf" >> /usr/local/lib/python3.8/site-packages/certifi/cacert.pem
+        cat /usr/src/ca.pem >> /usr/local/lib/python3.8/site-packages/certifi/cacert.pem
 fi
 
 exec "$@"
